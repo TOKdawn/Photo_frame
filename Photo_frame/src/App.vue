@@ -14,12 +14,9 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  width: 100%;
-  height: 100%;
- 
 }
 body{
-  padding: 0px 20px;
+  padding: 0px 0px;
   margin: 0;
 }
 #cropper>div:nth-child(2){

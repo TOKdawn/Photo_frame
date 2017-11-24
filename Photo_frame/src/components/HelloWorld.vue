@@ -1,5 +1,5 @@
 <template>
-<div id="sss" ref="container">
+<div id="sss" ref="container" :style="{width: lastwidth+'px',height: lastheight+'px'}">
   sss
   <vueCropper
   ref="cropper"
@@ -18,17 +18,27 @@
 <label class="btn" for="uploads">upload</label>
 	<input type="file" id="uploads" style="position:absolute; clip:rect(0 0 0 0);"
 	 accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadImg">
+   <div class="show-preview" :style="{'width': previews.w + 'px', 'height': previews.h + 'px',  'overflow': 'hidden', 'margin': '5px'}">
+			<button @click="finish('base64')" class="btn">preview(base64)</button>
+	</div>
+  <img :src = "zbase64[0]">
+  sssssss
 </div>
+
 </template>
 <script>
 import vueCropper from 'vue-cropper'
 export default {
 	data: function () {
 		return {
+      zbase64: [],
+     previews: {},
+      lastwidth: 100,
+      lastheight: 200,
+      fullwidth: 100,
       maxWidth: 30000,
       maxHeight: 30000,
       fixedNumber: [6,9],
-    
       option: {
         size: 1,
         outputType: 'jpg',
@@ -60,18 +70,30 @@ export default {
 		},
 		finish (type) {
 			// 输出
-			var test = window.open('about:blank')
-			test.document.body.innerHTML = '图片生成中..'
-			if (type === 'blob') {
+      var test = window.open('about:blank')
+      test.document.body.innerHTML='</p>aa<img :src="'+this.base64+'">'
 				this.$refs.cropper.getCropBlob((data) => {
-					var test = window.open('')
-					test.location.href = window.URL.createObjectURL(data)
-				})
-			} else {
-				this.$refs.cropper.getCropData((data) => {
-					test.location.href = data
-				})
-			}
+          // test.location.href = window.URL.createObjectURL(data)
+          var c=document.createElement('canvas')
+      var ctx=c.getContext('2d')
+      c.width = this.lastwidth
+      c.height = this.lastheight
+      ctx.rect(0,0,c.width,c.height);
+	    ctx.fillStyle='#fff';
+      ctx.fill();
+      var img2 = new Image;
+      img2.src =  window.URL.createObjectURL(data)
+      img2.onload=function(){
+				ctx.drawImage(img2,0,0,c.width,c.height);
+      }
+     var img=new Image;
+			img.src= require('./img.jpg');
+			img.onload=function(){
+				ctx.drawImage(img,0,0,c.width,c.height);
+      }
+      this.zbase64.push(c.toDataURL("image/jpeg",0.8));
+      console.log(this.zbase64[0])
+        })
 		},
 
 		down (type) {
@@ -92,8 +114,8 @@ export default {
 					aLink.click()
 				})
 			}
-		},
-
+    },
+   
 		uploadImg (e, num) {
 			//上传图片
 			// this.option.img
@@ -111,9 +133,11 @@ export default {
 				} else {
 					data = e.target.result
         }
-        console.log(data)
+        num=1
+        // console.log(num)
 				if (num === 1) {
-					this.option.img = data
+          this.option.img = data
+          console.log(data)
 				} else if (num === 2) {
 					this.example2.img = data
 				}
@@ -126,7 +150,13 @@ export default {
 	},
 	components: {
 		vueCropper
-	}
+  } ,
+  created(){
+      var fullwidth =  document.body.clientWidth
+      this.lastwidth = fullwidth*0.8
+      this.lastheight = this.lastwidth/6*9
+      console.log(this.lastwidth,this.lastheight)
+    },
 //  mounted() {
 //     var cropper = this.$refs['container']
 //     console.log(this.$refs['container'].style.width)
@@ -137,11 +167,12 @@ export default {
 </script>
 <style scoped>
 #sss{
-  width: 100%;
-  height: 70vh;
   display: block;
   background: #a0c;
   text-align: left;
+  left: 0;
+  right: 0;
+  margin: auto;
 }
 #cropper::before{
   content: '';
