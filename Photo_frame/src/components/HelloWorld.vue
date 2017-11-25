@@ -21,6 +21,7 @@
    <div class="show-preview" :style="{'width': previews.w + 'px', 'height': previews.h + 'px',  'overflow': 'hidden', 'margin': '5px'}">
 			<button @click="finish('base64')" class="btn">preview(base64)</button>
 	</div>
+	<canvas id="myCanvas" width="500" height="300" ></canvas>
   <img :src = "zbase64[0]">
   sssssss
 </div>
@@ -31,6 +32,7 @@ import vueCropper from 'vue-cropper'
 export default {
 	data: function () {
 		return {
+			c: [],
       zbase64: [],
      previews: {},
       lastwidth: 100,
@@ -68,33 +70,43 @@ export default {
 		realTime (data) {
 			this.previews = data
 		},
-		finish (type) {
-			// 输出
-      var test = window.open('about:blank')
-      test.document.body.innerHTML='</p>aa<img :src="'+this.base64+'">'
-				this.$refs.cropper.getCropBlob((data) => {
-          // test.location.href = window.URL.createObjectURL(data)
-          var c=document.createElement('canvas')
-      var ctx=c.getContext('2d')
-      c.width = this.lastwidth
-      c.height = this.lastheight
-      ctx.rect(0,0,c.width,c.height);
-	    ctx.fillStyle='#fff';
-      ctx.fill();
-      var img2 = new Image;
-      img2.src =  window.URL.createObjectURL(data)
-      img2.onload=function(){
-				ctx.drawImage(img2,0,0,c.width,c.height);
-      }
-     var img=new Image;
-			img.src= require('./img.jpg');
-			img.onload=function(){
-				ctx.drawImage(img,0,0,c.width,c.height);
-      }
-      this.zbase64.push(c.toDataURL("image/jpeg",0.8));
-      console.log(this.zbase64[0])
-        })
-		},
+
+		finish(type) {
+    // 输出
+    var test = window.open('about:blank') 
+	this.$refs.cropper.getCropBlob((data) => {
+        var c = document.getElementById('myCanvas') 
+		var ctx = c.getContext('2d') 
+		c.width = this.lastwidth 
+		c.height = this.lastheight 
+		ctx.rect(0, 0, c.width, c.height);
+		console.log("创建canvas")
+        ctx.fill();
+		for(var i= 0;i<2;i++){
+			if(i===0){
+				console.log("进入绘制")
+				  var img = new Image;
+       			  img.src = window.URL.createObjectURL(data);
+				  img.onload = function() {
+           	 	  		console.log("绘制内容") 
+				  		ctx.drawImage(img, 0, 0, c.width, c.height);
+				  		var img2 = new Image;
+       		 	  		img2.src = require('./bg2.png')
+				  		img2.onload = function() {
+           					 console.log("绘制背景") 
+							 	ctx.drawImage(img2, 0, 0, c.width, c.height);
+       					}		
+      			 }
+			}else{
+					console.log("填充数组")
+        			this.zbase64.push(c.toDataURL("image/png", 0.8));
+			}
+		}
+        // console.log(this.zbase64[0])
+    }) 
+	// this.zbase64.push(c.toDataURL("image/png", 0.8));
+	test.document.body.innerHTML = '</p>aa<img :src="' + this.base64 + '">'
+},
 
 		down (type) {
 			// event.preventDefault()
@@ -179,7 +191,7 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: url('./bg.png') 0 0/100% 100% no-repeat;
+  background: url('./bg2.png') 0 0/100% 100% no-repeat;
   z-index: 2;
 }
 
