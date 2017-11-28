@@ -14,10 +14,12 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+
 }
 body{
   padding: 0px 0px;
   margin: 0;
+  background-color: #eee;
 }
 #cropper>div:nth-child(2){
   z-index: 5;
