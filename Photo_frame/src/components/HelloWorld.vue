@@ -2,7 +2,8 @@
 <el-container>
   <el-main>
 	  <div id="reust" :class="{hold:ishold}">
-		  sssssss<img :src = "zbase64[0]" id="zpy">
+		  <img :src = "zbase64[0]" id="zpy" >
+      <img src="./imaaa.png" id="resut">
 	  </div>
 	   <div id="sss" ref="container" :style="{width: lastwidth+'px',height: lastheight+'px'}">
 	   <vueCropper
@@ -300,5 +301,11 @@ export default {
 	z-index: 2;
 	top:0;
 	position: absolute;
+}
+#zpy{
+  margin-top:5px;
+}
+#resut{
+  width: 70%;
 }
 </style>
