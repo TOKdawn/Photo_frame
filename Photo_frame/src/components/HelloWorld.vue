@@ -269,7 +269,7 @@ export default {
   position: absolute;
   background-color: #fff;
   width: 100%;
-  height: 100%;
+  height: 110%;
   z-index: 13;
 }
 .el-main {
@@ -306,6 +306,6 @@ export default {
   margin-top:5px;
 }
 #resut{
-  width: 70%;
+  width: 60%;
 }
 </style>
