@@ -1,14 +1,21 @@
 <template>
-  <div id="app">
-    <router-view/>
+  <div>
+
+    <router-view></router-view>
   </div>
 </template>
 <script>
 export default {
-  name: 'app'
+ 
 }
 </script>
 <style>
+/* #cropper>div:nth-child(3){
+  z-index: 5;
+} */
+body{
+  margin: 0;
+}
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -25,7 +32,4 @@ body{
   z-index: 5;
   background: transparent;
 }
-/* #cropper>div:nth-child(3){
-  z-index: 5;
-} */
 </style>

@@ -23,8 +23,15 @@
 ></vueCropper>
 <img :src="option.bg" :style="{width: lastwidth+'px',height: lastheight+'px',}" id = "imgbg">
 </div>
+
 </el-main>
+
   <el-footer>
+ 
+      <el-alert
+    title="把图片放大缩写并移到合适位置"
+    type="success">
+  </el-alert>
 	  <el-row :gutter="20" id="imgbarr">
   <el-col :span="6"  ><div><img src="./bg1.png" class="showbar"  @click="changBG(1)"></div></el-col>
   <el-col :span="6"  ><div><img src="./bg2.png" class="showbar"  @click="changBG(2)"> </div></el-col>
@@ -66,6 +73,7 @@ export default {
     };
   },
   methods: {
+    
     changeImg() {
       this.option.img = this.lists[~~(Math.random() * this.lists.length)].img;
     },
@@ -252,6 +260,14 @@ export default {
     this.lastwidth = fullwidth * 0.8;
     this.lastheight = this.lastwidth / 6 * 9;
     console.log(this.lastwidth, this.lastheight);
+    
+        const h = this.$createElement;
+
+        this.$notify({
+          title: '注意',
+          message: h('i', { style: 'color: teal'}, '把图片放大缩写并移到合适位置')
+        });
+      
   }
 };
 </script>
@@ -307,5 +323,9 @@ export default {
 }
 #resut{
   width: 60%;
+}
+#tishi{
+  color: #B21919;
+  font-size: 17px;
 }
 </style>
