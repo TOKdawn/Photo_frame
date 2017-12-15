@@ -73,7 +73,6 @@ export default {
     };
   },
   methods: {
-    
     changeImg() {
       this.option.img = this.lists[~~(Math.random() * this.lists.length)].img;
     },
@@ -95,25 +94,25 @@ export default {
     realTime(data) {
       this.previews = data;
     },
-	changBG(type){
-		this.type = type
-		console.log(type)
-		switch(type){
-			case 1:
-			this.option.bg = require("./bg1.png")
-			break;
-			case 2:
-			this.option.bg = require("./bg2.png")
-			break;
-			case 3:
-			this.option.bg = require("./bg3.png")
-			break;
-			case 4:
-			this.option.bg = require("./bg4.png")
-			break;
-		}
-		console.log(this.type)
-	},
+    changBG(type) {
+      this.type = type;
+      console.log(type);
+      switch (type) {
+        case 1:
+          this.option.bg = require("./bg1.png");
+          break;
+        case 2:
+          this.option.bg = require("./bg2.png");
+          break;
+        case 3:
+          this.option.bg = require("./bg3.png");
+          break;
+        case 4:
+          this.option.bg = require("./bg4.png");
+          break;
+      }
+      console.log(this.type);
+    },
     finish() {
       // 输出
       this.ishold = false;
@@ -260,14 +259,64 @@ export default {
     this.lastwidth = fullwidth * 0.8;
     this.lastheight = this.lastwidth / 6 * 9;
     console.log(this.lastwidth, this.lastheight);
-    
-        const h = this.$createElement;
 
-        this.$notify({
-          title: '注意',
-          message: h('i', { style: 'color: teal'}, '把图片放大缩写并移到合适位置')
+    var config = {
+      debug: "", // 开启调试模式
+      appId: "", // 必填，公众号的唯一标识
+      timestamp: "", // 必填，生成签名的时间戳
+      nonceStr: "", // 必填，生成签名的随机串
+      signature: "", // 必填，签名，见附录1
+      jsApiList: [
+
+      ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+    };
+   this.$axios({
+      method: "get",
+      url: "/",
+      data: {
+        url: window.location.href
+      }
+    })
+      .then(function(response) {
+        var json = JSON.parse(response.result);
+        config.debug = json.debug;
+        config.appId = json.appId;
+        config.timestamp = json.timestamp;
+        config.nonceStr = json.nonceStr;
+        config.signature = json.signature;
+        config.jsApiList = json.jsApiList;
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    wx.config(config);
+    wx.ready(function() {
+      //分享接口
+      wx.onMenuShareTimeline({
+        title: "这里是分享标题", // 分享标题
+        link: window.location.href, // 分享链接
+        imgUrl: "分享图标地址.没有,先这么放着吧", // 分享图标
+        success: function() {
+          // 用户确认分享后执行的回调函数
+          alert("分享成功");
+        },
+        cancel: function() {
+          // 用户取消分享后执行的回调函数
+          alert("不分享拉倒");
+        }
+      }),
+        wx.getLocalImgData({
+           // 图片的localID
+          success: function(res) {
+            this.option.img = res.localData; // localData是图片的base64数据，可以用img标签显示
+            console.log(this.option.img)
+          }
         });
-      
+    });
+    wx.error(function(res) {
+      console.log("error:" + res);
+    });
+    wx.getLocalImgData();
   }
 };
 </script>
@@ -313,19 +362,19 @@ export default {
   background: url("./bg1.png") 0 0/100% 100% no-repeat;
   z-index: 2;
 } */
-#imgbg{
-	z-index: 2;
-	top:0;
-	position: absolute;
+#imgbg {
+  z-index: 2;
+  top: 0;
+  position: absolute;
 }
-#zpy{
-  margin-top:5px;
+#zpy {
+  margin-top: 5px;
 }
-#resut{
+#resut {
   width: 60%;
 }
-#tishi{
-  color: #B21919;
+#tishi {
+  color: #b21919;
   font-size: 17px;
 }
 </style>
