@@ -27,6 +27,7 @@ body{
   padding: 0px 0px;
   margin: 0;
   background-color: #eee;
+ 
 }
 #cropper>div:nth-child(2){
   z-index: 5;

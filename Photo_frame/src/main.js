@@ -10,7 +10,7 @@ import axios from 'axios'
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 Vue.use(vueCropper)
-axios.defaults.baseURL = ' '
+axios.defaults.baseURL = 'http://shimmer.neusoft.edu.cn'
 Vue.prototype.$axios = axios
     /* eslint-disable no-new */
 Vue.use(VueRouter)

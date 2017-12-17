@@ -5,6 +5,9 @@
 		  <img :src = "zbase64[0]" id="zpy" >
       <img src="./imaaa.png" id="resut">
 	  </div>
+    <div id="bertishi" :class="{hold:tishi}">
+      <el-button @click="yincang">我知道了</el-button>
+    </div>
 	   <div id="sss" ref="container" :style="{width: lastwidth+'px',height: lastheight+'px'}">
 	   <vueCropper
   ref="cropper"
@@ -64,6 +67,7 @@ export default {
       maxWidth: 30000,
       maxHeight: 30000,
       fixedNumber: [6, 9],
+      tishi: false,
       option: {
         size: 1,
         outputType: "jpg",
@@ -73,6 +77,9 @@ export default {
     };
   },
   methods: {
+    yincang(){
+      this.tishi = true;
+    },
     changeImg() {
       this.option.img = this.lists[~~(Math.random() * this.lists.length)].img;
     },
@@ -271,8 +278,8 @@ export default {
       ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
     };
    this.$axios({
-      method: "get",
-      url: "/",
+      method: "post",
+      url: "/wechat/api/wechat/jssdk_config",
       data: {
         url: window.location.href
       }
@@ -376,5 +383,12 @@ export default {
 #tishi {
   color: #b21919;
   font-size: 17px;
+}
+#bertishi{
+  background-color: rgba(6, 6, 6, .6);
+  z-index: 20;
+  height: 100vh;
+  position: absolute;
+  width: 100%;
 }
 </style>
