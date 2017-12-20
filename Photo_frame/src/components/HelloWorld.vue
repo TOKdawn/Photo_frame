@@ -282,7 +282,7 @@ export default {
       data: {
         "url": window.location.href
       },
-        headers: {"mimeType": "multipart/form-data"}
+        headers: {  'Content-Type': 'application/x-www-form-urlencoded'}
     })
       .then(function(response) {
         var json = JSON.parse(response.result);
