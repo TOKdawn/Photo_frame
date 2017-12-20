@@ -2,17 +2,17 @@
 <el-container>
   <el-main>
 	  <div id="reust" :class="{hold:ishold}">
-		  <img :src = "zbase64[0]" id="zpy" >
-      <img src="./imaaa.png" id="resut">
+		  <img :src = "zbase64[0]"  :style="{width: lastwidth+'px',height: lastheight+'px',}" id="zpy" >
+      <img src="./imaaa.png"  id="resut">
 	  </div>
     <div id="bertishi" :class="{hold:tishi}">
       <el-button @click="yincang">我知道了</el-button>
     </div>
 	   <div id="sss" ref="container" :style="{width: lastwidth+'px',height: lastheight+'px'}">
 	   <vueCropper
-  ref="cropper"
-  :img="option.img"
-  :full="option.full"
+     ref="cropper"
+     :img="option.img"
+     :full="option.full"
   :outputSize="option.size"
   :outputType="option.outputType"
   :autoCrop="true"
@@ -23,23 +23,18 @@
   id="cropper"
   :info="false"
   @realTime="realTime"
-></vueCropper>
+  ></vueCropper>
 <img :src="option.bg" :style="{width: lastwidth+'px',height: lastheight+'px',}" id = "imgbg">
 </div>
 
 </el-main>
 
   <el-footer>
- 
-      <el-alert
-    title="把图片放大缩写并移到合适位置"
-    type="success">
-  </el-alert>
 	  <el-row :gutter="20" id="imgbarr">
-  <el-col :span="6"  ><div><img src="./bg1.png" class="showbar"  @click="changBG(1)"></div></el-col>
-  <el-col :span="6"  ><div><img src="./bg2.png" class="showbar"  @click="changBG(2)"> </div></el-col>
-  <el-col :span="6"  ><div><img src="./bg3.png" class="showbar"  @click="changBG(3)"> </div></el-col>
-  <el-col :span="6"  ><div><img src="./bg4.png" class="showbar"  @click="changBG(4)"></div></el-col>
+  <el-col :span="6"  ><div ><div class="fugai" @click="changBG(1)">&nbsp</div> <img src="./bg2.png" class="showbar" > </div></el-col>
+  <el-col :span="6"  ><div><div class="fugai" @click="changBG(2)">&nbsp</div> <img src="./bg2.png" class="showbar" > </div></el-col>
+  <el-col :span="6"  ><div ><div class="fugai" @click="changBG(3)">&nbsp</div> <img src="./bg3.png" class="showbar" > </div></el-col>
+  <el-col :span="6"  ><div ><div class="fugai" @click="changBG(4)">&nbsp</div> <img src="./bg4.png" class="showbar" ></div></el-col>
 </el-row>
 
 	  <el-row type="flex" class="row-bg" justify="space-around">
@@ -77,6 +72,9 @@ export default {
     };
   },
   methods: {
+    clickimg(){
+      console.log("imgimgimg")
+    },
     yincang(){
       this.tishi = true;
     },
@@ -127,8 +125,8 @@ export default {
       this.$refs.cropper.getCropBlob(data => {
         var c = document.createElement("canvas");
         var ctx = c.getContext("2d");
-        c.width = this.lastwidth;
-        c.height = this.lastheight;
+        c.width = 500;
+        c.height = 750;
         ctx.rect(0, 0, c.width, c.height);
         console.log("创建canvas");
         ctx.fillStyle = "#fff";
@@ -277,12 +275,14 @@ export default {
 
       ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
     };
+    console.log(window.location.href)
    this.$axios({
-      method: "post",
-      url: "/wechat/api/wechat/jssdk_config",
+      method: 'POST',
+      url: '/wechat/api/wechat/jssdk_config',
       data: {
-        url: window.location.href
-      }
+        "url": window.location.href
+      },
+        headers: {"mimeType": "multipart/form-data"}
     })
       .then(function(response) {
         var json = JSON.parse(response.result);
@@ -296,6 +296,7 @@ export default {
       .catch(function(error) {
         console.log(error);
       });
+
     wx.config(config);
     wx.ready(function() {
       //分享接口
@@ -333,6 +334,14 @@ export default {
 }
 .showbar {
   width: 70%;
+}
+.fugai{
+  z-index: 12;
+  background-color: rgba(6, 6, 6, .0);
+  position: absolute;
+  width: 17.5%;
+  display: block;
+  height: 100%;
 }
 .hold {
   display: none;
