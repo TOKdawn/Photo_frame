@@ -72,10 +72,10 @@ export default {
     };
   },
   methods: {
-    clickimg(){
-      console.log("imgimgimg")
+    clickimg() {
+      console.log("imgimgimg");
     },
-    yincang(){
+    yincang() {
       this.tishi = true;
     },
     changeImg() {
@@ -271,34 +271,40 @@ export default {
       timestamp: "", // 必填，生成签名的时间戳
       nonceStr: "", // 必填，生成签名的随机串
       signature: "", // 必填，签名，见附录1
-      jsApiList: [
-
-      ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+      jsApiList: [] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
     };
-    console.log(window.location.href)
-   this.$axios({
-      method: 'POST',
-      url: '/wechat/api/wechat/jssdk_config',
-      data: {
-        "url": window.location.href
-      },
-        headers: {  'Content-Type': 'application/x-www-form-urlencoded'}
-    })
+
+    //  this.$axios({
+    //     method: 'get',
+    //     url: '/wechat/api/wechat/jssdk_config',
+    //     data: {
+    //       "url": window.location.href
+    //     },
+    //       headers: {  'Content-Type': 'application/x-www-form-urlencoded'}
+    //   })
+
+    this.$axios
+      .get("/wechat/api/wechat/jssdk_config", {
+        params: { url: window.location.href }
+      })
       .then(function(response) {
         var json = JSON.parse(response.result);
-        config.debug = json.debug;
-        config.appId = json.appId;
-        config.timestamp = json.timestamp;
-        config.nonceStr = json.nonceStr;
-        config.signature = json.signature;
-        config.jsApiList = json.jsApiList;
+        this.config.debug = json.debug;
+        this.config.appId = json.appId;
+        this.config.timestamp = json.timestamp;
+        this.config.nonceStr = json.nonceStr;
+        this.config.signature = json.signature;
+        this.config.jsApiList = json.jsApiList;
       })
       .catch(function(error) {
         console.log(error);
       });
 
     wx.config(config);
+    let that = this;
+    console.log("========!!!!");
     wx.ready(function() {
+      console.log(that.data);
       //分享接口
       wx.onMenuShareTimeline({
         title: "这里是分享标题", // 分享标题
@@ -312,19 +318,27 @@ export default {
           // 用户取消分享后执行的回调函数
           alert("不分享拉倒");
         }
-      }),
-        wx.getLocalImgData({
-           // 图片的localID
-          success: function(res) {
-            this.option.img = res.localData; // localData是图片的base64数据，可以用img标签显示
-            console.log(this.option.img)
-          }
-        });
+      });
+
+      wx.chooseImage({
+         _this: that,
+        count: 1, // 默认9
+        sizeType: ["original", "compressed"], // 可以指定是原图还是压缩图，默认二者都有
+        sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
+        success: function(res) {
+          console.log("_this:",_this.data)
+          _this.option.img = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+        }
+      });
+
     });
+
+
     wx.error(function(res) {
       console.log("error:" + res);
     });
-    wx.getLocalImgData();
+    console.log(wx);
+    
   }
 };
 </script>
@@ -335,9 +349,9 @@ export default {
 .showbar {
   width: 70%;
 }
-.fugai{
+.fugai {
   z-index: 12;
-  background-color: rgba(6, 6, 6, .0);
+  background-color: rgba(6, 6, 6, 0);
   position: absolute;
   width: 17.5%;
   display: block;
@@ -393,8 +407,8 @@ export default {
   color: #b21919;
   font-size: 17px;
 }
-#bertishi{
-  background-color: rgba(6, 6, 6, .6);
+#bertishi {
+  background-color: rgba(6, 6, 6, 0.6);
   z-index: 20;
   height: 100vh;
   position: absolute;
