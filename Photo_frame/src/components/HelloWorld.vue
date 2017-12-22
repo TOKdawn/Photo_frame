@@ -6,7 +6,7 @@
       <img src="./imaaa.png"  id="resut">
 	  </div>
     <div id="bertishi" :class="{hold:tishi}">
-      <el-button @click="yincang">我知道了</el-button>
+      <img @click="yincang" src="./tishi.png" class="tishi"></img>
     </div>
 	   <div id="sss" ref="container" :style="{width: lastwidth+'px',height: lastheight+'px'}">
 	   <vueCropper
@@ -31,18 +31,19 @@
 
   <el-footer>
 	  <el-row :gutter="20" id="imgbarr">
-  <el-col :span="6"  ><div ><div class="fugai" @click="changBG(1)">&nbsp</div> <img src="./bg2.png" class="showbar" > </div></el-col>
+  <el-col :span="6"  ><div ><div class="fugai" @click="changBG(1)">&nbsp</div> <img src="./bg1.png" class="showbar" > </div></el-col>
   <el-col :span="6"  ><div><div class="fugai" @click="changBG(2)">&nbsp</div> <img src="./bg2.png" class="showbar" > </div></el-col>
   <el-col :span="6"  ><div ><div class="fugai" @click="changBG(3)">&nbsp</div> <img src="./bg3.png" class="showbar" > </div></el-col>
   <el-col :span="6"  ><div ><div class="fugai" @click="changBG(4)">&nbsp</div> <img src="./bg4.png" class="showbar" ></div></el-col>
 </el-row>
 
 	  <el-row type="flex" class="row-bg" justify="space-around">
-  <el-col :span="6">  <label class="el-button" for="uploads">选择图片</label>
+  <el-col :span="12">  <label class="el-button" for="uploads">选择图片</label>
 	<input type="file" id="uploads" style="position:absolute; clip:rect(0 0 0 0);"
 	 accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadImg"></el-col>
-  <el-col :span="6"><el-button  @click="finish()">生成海报</el-button></el-col>
+  <el-col :span="12"><el-button  @click="finish()">生成海报</el-button></el-col>
 </el-row>
+
 	</el-footer>
 </el-container>
 </template>
@@ -63,6 +64,7 @@ export default {
       maxHeight: 30000,
       fixedNumber: [6, 9],
       tishi: false,
+      msg: "全局作用域变量",
       option: {
         size: 1,
         outputType: "jpg",
@@ -125,8 +127,8 @@ export default {
       this.$refs.cropper.getCropBlob(data => {
         var c = document.createElement("canvas");
         var ctx = c.getContext("2d");
-        c.width = 500;
-        c.height = 750;
+        c.width = 600;
+        c.height = 950;
         ctx.rect(0, 0, c.width, c.height);
         console.log("创建canvas");
         ctx.fillStyle = "#fff";
@@ -263,10 +265,9 @@ export default {
     var fullwidth = document.body.clientWidth;
     this.lastwidth = fullwidth * 0.8;
     this.lastheight = this.lastwidth / 6 * 9;
-    console.log(this.lastwidth, this.lastheight);
+    // console.log(this.lastwidth, this.lastheight);
 
     var config = {
-      debug: "", // 开启调试模式
       appId: "", // 必填，公众号的唯一标识
       timestamp: "", // 必填，生成签名的时间戳
       nonceStr: "", // 必填，生成签名的随机串
@@ -283,62 +284,56 @@ export default {
     //       headers: {  'Content-Type': 'application/x-www-form-urlencoded'}
     //   })
 
+    let _this = this;
     this.$axios
-      .get("/wechat/api/wechat/jssdk_config", {
-        params: { url: window.location.href }
-      })
+      .get("wechat_jssdk.php?" + window.location.href.split("#")[0])
       .then(function(response) {
-        var json = JSON.parse(response.result);
-        this.config.debug = json.debug;
-        this.config.appId = json.appId;
-        this.config.timestamp = json.timestamp;
-        this.config.nonceStr = json.nonceStr;
-        this.config.signature = json.signature;
-        this.config.jsApiList = json.jsApiList;
+        console.log("匿名函数获取外部对象:", _this.msg);
+        console.log("返回的sdk对象:", response);
+        config.appId = response.data.appId;
+        config.timestamp = response.data.timestamp;
+        config.nonceStr = response.data.nonceStr;
+        config.signature = response.data.signature;
+        config.jsApiList = ["onMenuShareTimeline", "chooseImage"];
+        wx.config(config);
+      
+        wx.ready(function() {
+          console.log("微信接口配置成功:", config);
+          console.log("获取vue变量", _this.option);
+          //分享接口
+          wx.onMenuShareTimeline({
+            title: "这里是分享标题", // 分享标题
+            link: window.location.href, // 分享链接
+            imgUrl: "分享图标地址.没有,先这么放着吧", // 分享图标
+            success: function() {
+              // 用户确认分享后执行的回调函数
+              alert("分享成功");
+            },
+            cancel: function() {
+              // 用户取消分享后执行的回调函数
+              alert("不分享拉倒");
+            }
+          });
+         
+          wx.chooseImage({
+            count: 1, // 默认9
+            sizeType: ["original", "compressed"], // 可以指定是原图还是压缩图，默认二者都有
+            sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
+            success: function(res) {
+              console.log("内存获取本地数据_this:", _this.option);
+              _this.option.img = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+            }
+          });
+        });
       })
       .catch(function(error) {
         console.log(error);
       });
-
-    wx.config(config);
-    let that = this;
-    console.log("========!!!!");
-    wx.ready(function() {
-      console.log(that.data);
-      //分享接口
-      wx.onMenuShareTimeline({
-        title: "这里是分享标题", // 分享标题
-        link: window.location.href, // 分享链接
-        imgUrl: "分享图标地址.没有,先这么放着吧", // 分享图标
-        success: function() {
-          // 用户确认分享后执行的回调函数
-          alert("分享成功");
-        },
-        cancel: function() {
-          // 用户取消分享后执行的回调函数
-          alert("不分享拉倒");
-        }
-      });
-
-      wx.chooseImage({
-         _this: that,
-        count: 1, // 默认9
-        sizeType: ["original", "compressed"], // 可以指定是原图还是压缩图，默认二者都有
-        sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
-        success: function(res) {
-          console.log("_this:",_this.data)
-          _this.option.img = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-        }
-      });
-
-    });
-
-
     wx.error(function(res) {
-      console.log("error:" + res);
+      console.log("配置失败error:" + res);
     });
     console.log(wx);
-    
+    // wx.chooseImage();
   }
 };
 </script>
@@ -413,5 +408,16 @@ export default {
   height: 100vh;
   position: absolute;
   width: 100%;
+}
+.el-footer {
+  height: auto !important;
+}
+.tishi{
+  width: 300px;
+  display: block;
+  margin: 20% auto 0 auto;
+  left: 0;
+  right: 0;
+
 }
 </style>
