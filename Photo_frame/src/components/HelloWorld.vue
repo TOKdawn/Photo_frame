@@ -6,7 +6,9 @@
       <img src="./imaaa.png"  id="resut">
 	  </div>
     <div id="bertishi" :class="{hold:tishi}">
-      <img @click="yincang" src="./tishi.png" class="tishi"></img>
+      <div class="tishi" @click="yincang">
+      
+      </div>
     </div>
 	   <div id="sss" ref="container" :style="{width: lastwidth+'px',height: lastheight+'px'}">
 	   <vueCropper
@@ -40,7 +42,7 @@
 	  <el-row type="flex" class="row-bg" justify="space-around">
   <el-col :span="12">  <label class="el-button" for="uploads">选择图片</label>
 	<input type="file" id="uploads" style="position:absolute; clip:rect(0 0 0 0);"
-	 accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadImg"></el-col>
+	 accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadImg" ref="uploadbtn"></el-col>
   <el-col :span="12"><el-button  @click="finish()">生成海报</el-button></el-col>
 </el-row>
 
@@ -74,11 +76,11 @@ export default {
     };
   },
   methods: {
-    clickimg() {
-      console.log("imgimgimg");
-    },
+  
     yincang() {
       this.tishi = true;
+      console.log("ssss")
+      this.$refs.uploadbtn.click();
     },
     changeImg() {
       this.option.img = this.lists[~~(Math.random() * this.lists.length)].img;
@@ -229,6 +231,7 @@ export default {
     uploadImg(e, num) {
       //上传图片
       // this.option.img
+      console.log("ssss")
       var file = e.target.files[0];
       if (!/\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG)$/.test(e.target.value)) {
         alert("图片类型必须是.gif,jpeg,jpg,png,bmp中的一种");
@@ -248,13 +251,8 @@ export default {
         if (num === 1) {
           this.option.img = data;
           console.log(data);
-        } else if (num === 2) {
-          this.example2.img = data;
-        }
+        } 
       };
-      // 转化为base64
-      // reader.readAsDataURL(file)
-      // 转化为blob
       reader.readAsArrayBuffer(file);
     }
   },
@@ -266,74 +264,70 @@ export default {
     this.lastwidth = fullwidth * 0.8;
     this.lastheight = this.lastwidth / 6 * 9;
     // console.log(this.lastwidth, this.lastheight);
+    
+    // var config = {
+    //   appId: "", // 必填，公众号的唯一标识
+    //   timestamp: "", // 必填，生成签名的时间戳
+    //   nonceStr: "", // 必填，生成签名的随机串
+    //   signature: "", // 必填，签名，见附录1
+    //   jsApiList: [] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+    // };
 
-    var config = {
-      appId: "", // 必填，公众号的唯一标识
-      timestamp: "", // 必填，生成签名的时间戳
-      nonceStr: "", // 必填，生成签名的随机串
-      signature: "", // 必填，签名，见附录1
-      jsApiList: [] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-    };
+    // //  this.$axios({
+    // //     method: 'get',
+    // //     url: '/wechat/api/wechat/jssdk_config',
+    // //     data: {
+    // //       "url": window.location.href
+    // //     },
+    // //       headers: {  'Content-Type': 'application/x-www-form-urlencoded'}
+    // //   })
 
-    //  this.$axios({
-    //     method: 'get',
-    //     url: '/wechat/api/wechat/jssdk_config',
-    //     data: {
-    //       "url": window.location.href
-    //     },
-    //       headers: {  'Content-Type': 'application/x-www-form-urlencoded'}
-    //   })
-
-    let _this = this;
-    this.$axios
-      .get("wechat_jssdk.php?" + window.location.href.split("#")[0])
-      .then(function(response) {
-        console.log("匿名函数获取外部对象:", _this.msg);
-        console.log("返回的sdk对象:", response);
-        config.appId = response.data.appId;
-        config.timestamp = response.data.timestamp;
-        config.nonceStr = response.data.nonceStr;
-        config.signature = response.data.signature;
-        config.jsApiList = ["onMenuShareTimeline", "chooseImage"];
-        wx.config(config);
+    // let _this = this;
+    // this.$axios
+    //   .get("wechat_jssdk.php?" + window.location.href.split("#")[0])
+    //   .then(function(response) {
+    //     console.log("匿名函数获取外部对象:", _this.msg);
+    //     console.log("返回的sdk对象:", response);
+    //     config.appId = response.data.appId;
+    //     config.timestamp = response.data.timestamp;
+    //     config.nonceStr = response.data.nonceStr;
+    //     config.signature = response.data.signature;
+    //     config.jsApiList = ["onMenuShareTimeline", "chooseImage"];
+    //     wx.config(config);
       
-        wx.ready(function() {
-          console.log("微信接口配置成功:", config);
-          console.log("获取vue变量", _this.option);
-          //分享接口
-          wx.onMenuShareTimeline({
-            title: "这里是分享标题", // 分享标题
-            link: window.location.href, // 分享链接
-            imgUrl: "分享图标地址.没有,先这么放着吧", // 分享图标
-            success: function() {
-              // 用户确认分享后执行的回调函数
-              alert("分享成功");
-            },
-            cancel: function() {
-              // 用户取消分享后执行的回调函数
-              alert("不分享拉倒");
-            }
-          });
-         
-          wx.chooseImage({
-            count: 1, // 默认9
-            sizeType: ["original", "compressed"], // 可以指定是原图还是压缩图，默认二者都有
-            sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
-            success: function(res) {
-              console.log("内存获取本地数据_this:", _this.option);
-              _this.option.img = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-            }
-          });
-        });
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-    wx.error(function(res) {
-      console.log("配置失败error:" + res);
-    });
-    console.log(wx);
-    // wx.chooseImage();
+    //     wx.ready(function() {
+    //       console.log("微信接口配置成功:", config);
+    //       console.log("获取vue变量", _this.option);
+    //       var cimg;
+    //       wx.chooseImage({
+    //         count: 1, // 默认9
+    //         sizeType: ["original", "compressed"], // 可以指定是原图还是压缩图，默认二者都有
+    //         sourceType: ["album", "camera"], // 可以指定来源是相册还是相机，默认二者都有
+    //         success: function(res) {
+    //           alert( res.localIds[0]);
+    //           cimg = res.localIds[0]; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+    //           wx.getLocalImgData({
+    //             localId:cimg,
+    //             success:function(res){
+    //               _this.option.img = res.localData();
+    //               alert(_this.option.img);
+    //             }
+    //           })
+    //         }
+    //       });
+    //     });
+    //   })
+    //   .catch(function(error) {
+    //     console.log(error);
+    //   });
+    // wx.error(function(res) {
+    //   console.log("配置失败error:" + res);
+    // });
+    // console.log(wx);
+    // // wx.chooseImage();
+  },
+  mounted(){
+      
   }
 };
 </script>
@@ -403,7 +397,7 @@ export default {
   font-size: 17px;
 }
 #bertishi {
-  background-color: rgba(6, 6, 6, 0.6);
+  background-color: rgba(6, 6, 6, 0.8);
   z-index: 20;
   height: 100vh;
   position: absolute;
@@ -415,9 +409,13 @@ export default {
 .tishi{
   width: 300px;
   display: block;
-  margin: 20% auto 0 auto;
+  margin: 10% auto 0 auto;
   left: 0;
   right: 0;
-
+  background: url("./tishi.png") no-repeat 0 0 /100% 100% ;
+  height: 500px;
+}
+.cropper-view-box{
+  outline: 0px !important;
 }
 </style>
