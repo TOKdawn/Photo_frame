@@ -29,4 +29,7 @@ body {
   z-index: 5;
   background: transparent;
 }
+.cropper-view-box{
+  outline: 1px solid #eee !important;
+}
 </style>

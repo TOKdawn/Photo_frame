@@ -71,15 +71,15 @@ export default {
         size: 1,
         outputType: "jpg",
         img: require("./img.jpg"),
-        bg: require("./bg1.png")
+        bg: require("./bg1.png"),
+        full: true
       }
     };
   },
   methods: {
-  
     yincang() {
       this.tishi = true;
-      console.log("ssss")
+      console.log("ssss");
       this.$refs.uploadbtn.click();
     },
     changeImg() {
@@ -130,7 +130,7 @@ export default {
         var c = document.createElement("canvas");
         var ctx = c.getContext("2d");
         c.width = 600;
-        c.height = 950;
+        c.height = 900;
         ctx.rect(0, 0, c.width, c.height);
         console.log("创建canvas");
         ctx.fillStyle = "#fff";
@@ -231,7 +231,7 @@ export default {
     uploadImg(e, num) {
       //上传图片
       // this.option.img
-      console.log("ssss")
+      console.log("ssss");
       var file = e.target.files[0];
       if (!/\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG)$/.test(e.target.value)) {
         alert("图片类型必须是.gif,jpeg,jpg,png,bmp中的一种");
@@ -251,7 +251,7 @@ export default {
         if (num === 1) {
           this.option.img = data;
           console.log(data);
-        } 
+        }
       };
       reader.readAsArrayBuffer(file);
     }
@@ -264,7 +264,7 @@ export default {
     this.lastwidth = fullwidth * 0.8;
     this.lastheight = this.lastwidth / 6 * 9;
     // console.log(this.lastwidth, this.lastheight);
-    
+
     // var config = {
     //   appId: "", // 必填，公众号的唯一标识
     //   timestamp: "", // 必填，生成签名的时间戳
@@ -294,7 +294,7 @@ export default {
     //     config.signature = response.data.signature;
     //     config.jsApiList = ["onMenuShareTimeline", "chooseImage"];
     //     wx.config(config);
-      
+
     //     wx.ready(function() {
     //       console.log("微信接口配置成功:", config);
     //       console.log("获取vue变量", _this.option);
@@ -326,9 +326,7 @@ export default {
     // console.log(wx);
     // // wx.chooseImage();
   },
-  mounted(){
-      
-  }
+  mounted() {}
 };
 </script>
 <style scoped>
@@ -406,16 +404,16 @@ export default {
 .el-footer {
   height: auto !important;
 }
-.tishi{
+.tishi {
   width: 300px;
   display: block;
   margin: 10% auto 0 auto;
   left: 0;
   right: 0;
-  background: url("./tishi.png") no-repeat 0 0 /100% 100% ;
+  background: url("./tishi.png") no-repeat 0 0 /100% 100%;
   height: 500px;
 }
-.cropper-view-box{
-  outline: 0px !important;
+.cropper-view-box {
+  outline: 1px solid #eee !important;
 }
 </style>
