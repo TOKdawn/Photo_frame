@@ -22,6 +22,7 @@
   :autoCropHeight="maxHeight"
   :fixedBox = "true"
   :fixedNumber = "fixedNumber"
+  :original = "true"
   id="cropper"
   :info="false"
   @realTime="realTime"

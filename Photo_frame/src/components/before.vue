@@ -1,19 +1,18 @@
 <template>
   <el-container>
   <el-header  id="header"> 
-    <el-carousel indicator-position="outside" arrow="never" height="65vh" >
+    <el-carousel indicator-position="outside" arrow="never" height="70vh" >
     <el-carousel-item v-for="item in 4" :key="item">
       <h3></h3>
     </el-carousel-item>
   </el-carousel>
   </el-header>
-  <el-main><p>生成你的大东软个性贺卡</p>
-  <el-button type="warning" round @click="link">制作海报</el-button>
+  <el-main>
+  <el-button type="warning" round @click="link">制作大东软新年贺卡</el-button>
   </el-main>
   <div id="footer">策划: 品牌发展部&nbsp 研发:微光网络工作室</div>
 </el-container>
 </template>
-
 <script>
 export default {
   methods: {
@@ -25,7 +24,7 @@ export default {
 </script>
 <style>
 #header{
-  height: 75vh !important;
+  height: 80vh !important;
   background-color: chocolate;
   padding-top: 3vh;
 }
@@ -37,7 +36,7 @@ export default {
     margin: 0;
   }
   .el-main{
-    padding: 10px;
+    padding: 20px;
   }
   .el-carousel__item:nth-child(1) {
     background:url(./1.jpg) 0 0/100% 100% no-repeat;
