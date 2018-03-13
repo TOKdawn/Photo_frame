@@ -44,7 +44,7 @@
   <el-col :span="12">  <label class="el-button" for="uploads">选择图片</label>
 	<input type="file" id="uploads" style="position:absolute; clip:rect(0 0 0 0);"
 	 accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadImg" ref="uploadbtn"></el-col>
-  <el-col :span="12"><el-button  @click="finish()">生成海报</el-button></el-col>
+  <el-col :span="12"><el-button  @click="finish()">生成贺卡</el-button></el-col>
 </el-row>
 
 	</el-footer>
@@ -232,9 +232,10 @@ export default {
     uploadImg(e, num) {
       //上传图片
       // this.option.img
-      console.log("ssss");
+   
       var file = e.target.files[0];
-      if (!/\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG)$/.test(e.target.value)) {
+         console.log(file);
+      if (!/\.(gif|jpg|jpeg|png|bmp|JPG|PNG)$/.test(e.target.value)) {
         alert("图片类型必须是.gif,jpeg,jpg,png,bmp中的一种");
         return false;
       }
